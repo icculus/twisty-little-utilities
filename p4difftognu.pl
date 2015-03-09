@@ -5,6 +5,7 @@
 #  data that GNU patch(1) might accept.
 #
 # Usage looks like:  p4difftognu.pl <myPerforceDiff.diff |patch -p1
+#  or maybe:  p4 describe 342342 |p4difftognu.pl >myGnuDiff.diff
 
 use warnings;
 use strict;
