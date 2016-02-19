@@ -1,0 +1,40 @@
+#!/usr/bin/perl -w
+
+use warnings;
+use strict;
+
+
+sub walkdir {
+    my $d = shift;
+    opendir(DIRH, $d) or die("Couldn't open directory [$d]: $!");
+    my @dirfiles = readdir(DIRH);
+    closedir(DIRH);
+    foreach (@dirfiles) {
+        my $dent = $_;
+        next if $dent eq '.';
+        next if $dent eq '..';
+        doLowering($d . '/' . $dent);
+    }
+}
+
+sub doLowering {
+    my $path = shift;
+    my $l = $path;
+    $l =~ tr/A-Z/a-z/;
+    print("Lowercasing $path ...\n");
+    rename $path,$l or die("Failed to rename '$path' to '$l': $!\n");
+    if (-d $l) {
+        print("Walking $path ...\n");
+        walkdir($path);
+    }
+}
+
+
+# Mainline ...
+
+foreach (@ARGV) {
+    doLowering($_);
+}
+
+# end of lowerfiles ...
+
