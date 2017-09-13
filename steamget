@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#set -x
+
+STEAMCMD=`which steamcmd`
+if [ "$?" == 1 ]; then
+    echo "ERROR: don't see steamcmd in your \$PATH" 1>&2
+    echo 'Download/install instructions are here:' 1>&2
+    echo '  https://developer.valvesoftware.com/wiki/SteamCMD' 1>&2
+    exit 1
+fi
+
+if [ -z $1 -o -z $2 ]; then
+    echo "USAGE: $0 <steam_user> <appid> [install_path] [windows|macos|linux] [branchname] [branchpasswd]" 1>&2
+    echo "  - defaults to the steamapp-appid-platform in cwd for install path." 1>&2
+    echo "  - defaults to 'windows' for platform type." 1>&2
+    echo "  - defaults to the default branch for branch name." 1>&2
+    echo "  - defaults to no password for the branch password." 1>&2
+    exit 1
+fi
+
+STEAMUSER="$1"
+APPID="$2"
+INSTPATH="$3"
+PLAT="$4"
+BETA="$5"
+BETAPASSWD="$6"
+
+if [ -z $PLAT ]; then
+    PLAT=windows
+fi
+
+if [ -z $INSTPATH ]; then
+    INSTPATH="./steamapp-$APPID-$PLAT"
+fi
+
+if [ ! -z $BETA ]; then
+    BETAARGS="$BETAARGS -beta $BETA"
+fi
+
+if [ ! -z $BETAPASSWD ]; then
+    BETAARGS="$BETAARGS -betapassword $BETAPASSWD"
+fi
+
+# You need bDepotBuilderUnbufferedReads set to zero or this fails on ZFS (which doesn't support O_DIRECT).
+"$STEAMCMD" +@bDepotBuilderUnbufferedReads 0 +@sSteamCmdForcePlatformType $PLAT +force_install_dir steamget +login "$STEAMUSER" +app_update "$APPID" $BETAARGS validate +quit
+if [ $? == 0 ]; then
+    mv $HOME/.steam/steamcmd/steamget "$INSTPATH"
+fi
+
