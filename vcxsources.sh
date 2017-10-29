@@ -5,7 +5,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-grep 'ClCompile' "$1" |perl -w -p -e 's/\A\s+\<\/?ClCompile\>//;s/\r//g; s/\A\s*\<ClCompile Include="//; s#"\s*/\>##; s#\\#/#g; s/\A\n\Z//;' |sort |uniq
+grep 'ClCompile' "$1" |perl -w -p -e 's/\A\s+\<\/?ClCompile\>//;s/\r//g; s/\A\s*\<ClCompile Include="//; s#"\s*/\>##; s#"\s*\>##; s#\\#/#g; s/\A\n\Z//;' |sort |uniq
 exit 0
 
 
