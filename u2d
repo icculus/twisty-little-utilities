@@ -1,0 +1,77 @@
+#!/usr/bin/perl -w
+
+use warnings;
+use strict;
+
+use File::Basename;
+
+my $recurse = 0;
+my $regexp = undef;
+my $justmatch = 0;
+
+sub convert_file {
+    my $origfile = shift;
+    my $newfile = $_ . ".___u2d___";
+
+    if (-d $origfile) {
+	return if not $recurse;
+	opendir(DIRH, $origfile) || die("Couldn't open directory [$origfile]: $!");
+	my @dirfiles = readdir(DIRH);
+	closedir(DIRH);
+	foreach (@dirfiles) {
+	    next if (($_ eq ".") || ($_ eq ".."));
+	    convert_file($origfile . '/' . $_);
+	}
+        return;
+    }
+
+    return if ((defined $regexp) and (basename($origfile) !~ /$regexp/));
+    print("$origfile matches.\n"), return if ($justmatch);
+
+    print("Converting $origfile ...\n");
+
+    open(INHANDLE, "$origfile") || die("can't open $origfile: $!");
+    open(OUTHANDLE, ">$newfile") || die("can't open temp file: $!");
+    while (<INHANDLE>) {
+        s/^\n/\r\n/;
+	s/([^\r])\n/$1\r\n/g;
+        print(OUTHANDLE "$_");
+    }
+
+    close(INHANDLE);
+    close(OUTHANDLE);
+    rename("$newfile", "$origfile") || die("can't overwrite $origfile: $!");
+}
+
+foreach (@ARGV) {
+    if ($_ eq '--recurse') {
+	$recurse = 1;
+	next;
+    }
+
+    if ($_ eq '--no-recurse') {
+	$recurse = 0;
+	next;
+    }
+
+    if ($_ eq '--match-and-exit') {
+	$justmatch = 1;
+	next;
+    }
+
+    if ($_ eq '--no-match-and-exit') {
+	$justmatch = 0;
+	next;
+    }
+
+    if (s/^--regexp=(.*)/$1/) {
+        $regexp = $_;
+	#print("Regexp is [$regexp].\n");
+	next;
+    }
+
+    convert_file($_);
+}
+
+# end of u2d ...
+
