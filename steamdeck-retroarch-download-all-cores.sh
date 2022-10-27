@@ -19,6 +19,7 @@ if [ "x$RETROVER" = "x" ]; then
    exit 1
 fi
 
+RETROTMPDIR="$HOME/steamdeck_retroarch_core_update_tmp"
 LASTCHECKPATH="$HOME/.last_steamdeck_retroarch_core_update.txt"
 LASTCHECKVER=`cat "$LASTCHECKPATH"`
 
@@ -32,7 +33,6 @@ echo "$ME: Current version appears to be '$RETROVER'"
 echo "$ME: Updating!"
 echo
 
-RETROTMPDIR="$HOME/steamdeck_retroarch_core_update_tmp"
 rm -rf "$RETROTMPDIR"
 mkdir "$RETROTMPDIR"
 
@@ -54,7 +54,6 @@ cd cores
 unzip -o "$RETROINFOZIPPATH" || exit 1
 rm -f "$RETROCORE7ZPATH" "$RETROINFOZIPPATH"
 cp -Rnv "$RETROTMPPATH"/cores/* "$RETROCOREPATH"/
-rm -rf "$RETROTMPDIR"
 
 echo "$RETROVER" > "$LASTCHECKPATH"
 
@@ -118,4 +117,62 @@ for DCMODULE in boot ; do
     fi
 done
 
+# Preparation necessary for ScummVM games...
+if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
+    echo "Downloading ScummVM required files ..."
+    mkdir -p "$RETROTMPDIR"
+    curl -L -o "$RETROTMPDIR/scummvm.zip" "https://github.com/libretro/scummvm/raw/master/backends/platform/libretro/aux-data/scummvm.zip" && unzip -d "$RETROSYSTEMPATH" "$RETROTMPDIR/scummvm.zip"
+fi
+
+if [ ! -f "$RETROSYSTEMPATH/scummvm/extra/MT32_PCM.ROM" ]; then
+    echo "Downloading ScummVM Roland MT32 PCM ROM ..."
+    curl -L -o "$RETROSYSTEMPATH/scummvm/extra/MT32_PCM.ROM" "https://archive.org/download/mame-versioned-roland-mt-32-and-cm-32l-rom-files/mt32-roms.zip/mt32-roms%2FMT32_PCM.ROM"
+fi
+
+if [ ! -f "$RETROSYSTEMPATH/scummvm/extra/MT32_CONTROL.ROM" ]; then
+    echo "Downloading ScummVM Roland MT32 CONTROL ROM ..."
+    curl -L -o "$RETROSYSTEMPATH/scummvm/extra/MT32_CONTROL.ROM" "https://archive.org/download/mame-versioned-roland-mt-32-and-cm-32l-rom-files/mt32-roms.zip/mt32-roms%2FMT32_PCM.ROM"
+fi
+
+if [ ! -f "$RETROSYSTEMPATH/scummvm.ini" ]; then
+    echo "Creating a default ScummVM scummvm.ini ..."
+    cat > "$RETROSYSTEMPATH/scummvm.ini" <<EOF
+[scummvm]
+filtering=false
+mute=false
+soundfont=$RETROSYSTEMPATH/scummvm/extra/Roland_SC-55.sf2
+speech_volume=192
+native_mt32=false
+midi_gain=100
+gui_theme=scummmodern
+talkspeed=60
+mt32_device=mt32
+extrapath=$RETROSYSTEMPATH/scummvm/extra
+subtitles=false
+multi_midi=true
+fullscreen=true
+gui_browser_show_hidden=false
+gm_device=fluidsynth
+themepath=$RETROSYSTEMPATH/scummvm/theme
+sfx_volume=192
+music_volume=192
+speech_mute=false
+music_driver=auto
+opl_driver=auto
+aspect_ratio=false
+versioninfo=2.1.1
+autosave_period=300
+enable_gs=false
+
+EOF
+
+    echo "ScummVM is set up for use, but you need to add games to the list."
+    echo "Follow the directions at:"
+    echo "  https://docs.libretro.com/library/scummvm/#game-management"
+fi
+
+# Remove any downloaded leftovers...
+rm -rf "$RETROTMPDIR"
+
 exit 0
+
