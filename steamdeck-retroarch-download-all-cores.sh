@@ -70,8 +70,17 @@ echo
 # Feedback is needed in any case (which 3DO BIOS should I use?! etc).
 RETROSYSTEMPATH="$RETROPATH/system"
 
+# Nintendo Family Disk System for various NES/FDS emulators...
+for FDSMODULE in disksys ; do
+    ROMFILE="$FDSMODULE.rom"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading Nintendo Family Disk System bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Nintendo%20Family%20Disk%20System/"
+    fi
+done
+
 # PlayStation 1 BIOS for PCSX ReARMed, etc.
-for PS1MODULE in 5501 ; do
+for PS1MODULE in 5500 5501 5502 ; do
     ROMFILE="scph$PS1MODULE.bin"
     if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
         echo "Downloading PlayStation 1 bios $ROMFILE ..."
@@ -82,11 +91,13 @@ done
 # PlayStation 2 BIOS for pcsx2...
 mkdir -p "$RETROSYSTEMPATH/pcsx2/bios"
 for PS2MODULE in bin MEC ; do
-    ROMFILE="scph39001.$PS2MODULE"
-    if [ ! -f "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" ]; then
-        echo "Downloading PlayStation 2 bios $ROMFILE ..."
-        curl -L -o "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/PS2/$ROMFILE"
-    fi
+    for PS2BIOSVER in 39000 39001 39002 ; do
+        ROMFILE="scph$PS2BIOSVER.$PS2MODULE"
+        if [ ! -f "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" ]; then
+            echo "Downloading PlayStation 2 bios $ROMFILE ..."
+            curl -L -o "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/PS2/$ROMFILE"
+        fi
+    done
 done
 
 # MSX BIOS for fMSX...
@@ -114,6 +125,15 @@ for DCMODULE in boot ; do
     if [ ! -f "$RETROSYSTEMPATH/dc/$ROMFILE" ]; then
         echo "Downloading Dreamcast bios $ROMFILE ..."
         curl -L -o "$RETROSYSTEMPATH/dc/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Dreamcast/$ROMFILE"
+    fi
+done
+
+# Sega CD BIOS for Genesis Plus GX/PixoDrive/etc...
+for SEGACDMODULE in E U J ; do
+    ROMFILE="bios_CD_$SEGACDMODULE.bin"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading Sega CD bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Sega%20CD/$ROMFILE"
     fi
 done
 
