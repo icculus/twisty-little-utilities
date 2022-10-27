@@ -62,4 +62,60 @@ echo
 echo "$ME: Cores are updated to version $RETROVER!"
 echo
 
+
+# Let's grab some BIOSes some cores need...
+# If this fails, oh well.
+# These are all North American BIOSes, when given an option. This could be
+# improved (do cores know which to load? Should we decide where this script
+# is running from from timezone?)
+# Feedback is needed in any case (which 3DO BIOS should I use?! etc).
+RETROSYSTEMPATH="$RETROPATH/system"
+
+# PlayStation 1 BIOS for PCSX ReARMed, etc.
+for PS1MODULE in 5501 ; do
+    ROMFILE="scph$PS1MODULE.bin"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading PlayStation 1 bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/PSX/$ROMFILE"
+    fi
+done
+
+# PlayStation 2 BIOS for pcsx2...
+mkdir -p "$RETROSYSTEMPATH/pcsx2/bios"
+for PS2MODULE in bin MEC ; do
+    ROMFILE="scph39001.$PS2MODULE"
+    if [ ! -f "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" ]; then
+        echo "Downloading PlayStation 2 bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/pcsx2/bios/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/PS2/$ROMFILE"
+    fi
+done
+
+# MSX BIOS for fMSX...
+for MSXMODULE in DISK FMPAC KANJI MSX MSX2 MSX2EXT MSX2P MSX2PEXT MSXDOS2 PAINTER ; do
+    ROMFILE="$MSXMODULE.ROM"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading MSX bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/MSX/$ROMFILE"
+    fi
+done
+
+# Mattel Intellivision BIOS for FreeIntv...
+for INTVMODULE in ECS IVOICE exec grom ; do
+    ROMFILE="$INTVMODULE.bin"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading Intellivision bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Mattel%20Intellivision/$ROMFILE"
+    fi
+done
+
+# Sega Dreamcast BIOS for Flycast...
+mkdir -p "$RETROSYSTEMPATH/dc"
+for DCMODULE in boot ; do
+    ROMFILE="dc_$DCMODULE.bin"
+    if [ ! -f "$RETROSYSTEMPATH/dc/$ROMFILE" ]; then
+        echo "Downloading Dreamcast bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/dc/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Dreamcast/$ROMFILE"
+    fi
+done
+
 exit 0
