@@ -75,7 +75,7 @@ for FDSMODULE in disksys ; do
     ROMFILE="$FDSMODULE.rom"
     if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
         echo "Downloading Nintendo Family Disk System bios $ROMFILE ..."
-        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Nintendo%20Family%20Disk%20System/"
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/verifiedbiosfiles/OGA%20BIOS/Nintendo%20Family%20Disk%20System/$ROMFILE"
     fi
 done
 
