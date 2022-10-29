@@ -137,6 +137,16 @@ for SEGACDMODULE in E U J ; do
     fi
 done
 
+# Mac II BIOS for minivmac...
+for VMACMODULE in MacII ; do
+    ROMFILE="$VMACMODULE.rom"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading MacII bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://archive.org/download/mac_rom_archive_-_as_of_8-19-2011/mac_rom_archive_-_as_of_8-19-2011.zip/9779D2C4%20-%20MacII%20%28800k%20v2%29.ROM"
+    fi
+done
+
+
 # Preparation necessary for ScummVM games...
 if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
     echo "Downloading ScummVM required files ..."
