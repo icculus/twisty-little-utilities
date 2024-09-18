@@ -147,10 +147,14 @@ for VMACMODULE in MacII ; do
 done
 
 # Amiga ROM for puea...
-# !!! FIXME: we probably need more than this, this is just the first thing Time Bandit needed.  :)
-echo "Downloading Amiga kickstart ROM 40.68 for the A1200 ..."
-curl -L -o "$RETROSYSTEMPATH/kick40068.A1200" 'https://archive.org/download/Older_Computer_Environments_and_Operating_Systems/Amiga.zip/Amiga%2FAmiga%20Kickstart%20Roms%20-%20Complete%20-%20TOSEC%20v0.04%2FKS-ROMs%2FKickstart%20v3.1%20rev%2040.68%20%281993%29%28Commodore%29%28A1200%29.rom'
-
+# this github repo is packed full of verified bios files beyond amiga, maybe explore this later.
+for AMIGAMODULE in kick34005.A500 kick40063.A600 kick40068.A1200 ; do
+    ROMFILE="$AMIGAMODULE"
+    if [ ! -f "$RETROSYSTEMPATH/$ROMFILE" ]; then
+        echo "Downloading Amiga bios $ROMFILE ..."
+        curl -L -o "$RETROSYSTEMPATH/$ROMFILE" "https://github.com/Abdess/retroarch_system/raw/libretro/Commodore%20-%20Amiga/$AMIGAMODULE"
+    fi
+done
 
 # Preparation necessary for ScummVM games...
 if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
