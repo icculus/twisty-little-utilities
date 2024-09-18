@@ -146,6 +146,11 @@ for VMACMODULE in MacII ; do
     fi
 done
 
+# Amiga ROM for puea...
+# !!! FIXME: we probably need more than this, this is just the first thing Time Bandit needed.  :)
+echo "Downloading Amiga kickstart ROM 40.68 for the A1200 ..."
+curl -L -o "$RETROSYSTEMPATH/kick40068.A1200" 'https://archive.org/download/Older_Computer_Environments_and_Operating_Systems/Amiga.zip/Amiga%2FAmiga%20Kickstart%20Roms%20-%20Complete%20-%20TOSEC%20v0.04%2FKS-ROMs%2FKickstart%20v3.1%20rev%2040.68%20%281993%29%28Commodore%29%28A1200%29.rom'
+
 
 # Preparation necessary for ScummVM games...
 if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
