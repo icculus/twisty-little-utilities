@@ -53,7 +53,7 @@ mv "$RETROCORE7ZINTERNALPATH/cores" .
 cd cores
 unzip -o "$RETROINFOZIPPATH" || exit 1
 rm -f "$RETROCORE7ZPATH" "$RETROINFOZIPPATH"
-cp -Rnv "$RETROTMPPATH"/cores/* "$RETROCOREPATH"/
+cp -Rv --update=none "$RETROTMPPATH"/cores/* "$RETROCOREPATH"/
 
 echo "$RETROVER" > "$LASTCHECKPATH"
 
