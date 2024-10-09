@@ -156,6 +156,15 @@ for AMIGAMODULE in kick34005.A500 kick40063.A600 kick40068.A1200 ; do
     fi
 done
 
+# Preparation necessary for DirkSimple games...
+# Nuke all the files on each upgrade, since they're game logic and might change between versions.
+rm -rf "$RETROSYSTEMPATH/DirkSimple"
+mkdir -p "$RETROSYSTEMPATH/DirkSimple"
+curl -L -o "$RETROSYSTEMPATH/DirkSimple/dirksimple-main.zip" "https://github.com/icculus/DirkSimple/archive/refs/heads/main.zip"
+unzip "$RETROSYSTEMPATH/DirkSimple/dirksimple-main.zip" -d "$RETROSYSTEMPATH/DirkSimple" "DirkSimple-main/data/*"
+mv "$RETROSYSTEMPATH/DirkSimple/DirkSimple-main/data" "$RETROSYSTEMPATH/DirkSimple/"
+rm -rf "$RETROSYSTEMPATH/DirkSimple/dirksimple-main.zip" "$RETROSYSTEMPATH/DirkSimple/DirkSimple-main"
+
 # Preparation necessary for ScummVM games...
 if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
     echo "Downloading ScummVM required files ..."
