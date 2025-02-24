@@ -1,0 +1,22 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my $max = scalar(@ARGV);
+my $str = "Terminal";
+my $i = 0;
+
+if ($max > 0) {
+    $str = "";
+    for ($i = 0; $i < $max; $i++) {
+	if ($i > 0) {
+	    $str = $str . " ";
+	}
+	$str = $str . $ARGV[$i];
+    }
+}
+
+print "\033]0;$str\007";
+
+# end of xtitle ...
+
