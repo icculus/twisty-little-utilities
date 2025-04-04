@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec $@
+exec "$@"
 exit 1
 
 
