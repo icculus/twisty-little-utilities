@@ -4,10 +4,13 @@
 
 STEAMCMD=`which steamcmd`
 if [ "$?" == 1 ]; then
-    echo "ERROR: don't see steamcmd in your \$PATH" 1>&2
-    echo 'Download/install instructions are here:' 1>&2
-    echo '  https://developer.valvesoftware.com/wiki/SteamCMD' 1>&2
-    exit 1
+    STEAMCMD=`which steamcmd.sh`
+    if [ "$?" == 1 ]; then
+        echo "ERROR: don't see steamcmd in your \$PATH" 1>&2
+        echo 'Download/install instructions are here:' 1>&2
+        echo '  https://developer.valvesoftware.com/wiki/SteamCMD' 1>&2
+        exit 1
+    fi
 fi
 
 if [ -z $1 -o -z $2 ]; then
