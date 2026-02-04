@@ -169,7 +169,8 @@ rm -rf "$RETROSYSTEMPATH/DirkSimple/dirksimple-main.zip" "$RETROSYSTEMPATH/DirkS
 if [ ! -d "$RETROSYSTEMPATH/scummvm" ]; then
     echo "Downloading ScummVM required files ..."
     mkdir -p "$RETROTMPDIR"
-    curl -L -o "$RETROTMPDIR/scummvm.zip" "https://github.com/libretro/scummvm/raw/master/backends/platform/libretro/aux-data/scummvm.zip" && unzip -d "$RETROSYSTEMPATH" "$RETROTMPDIR/scummvm.zip"
+    #curl -L -o "$RETROTMPDIR/scummvm.zip" "https://github.com/libretro/scummvm/raw/master/backends/platform/libretro/aux-data/scummvm.zip" && unzip -d "$RETROSYSTEMPATH" "$RETROTMPDIR/scummvm.zip"
+    curl -L -o "$RETROTMPDIR/scummvm.zip" "https://github.com/diablodiab/libretro-scummvm-backend/raw/refs/heads/main/aux-data/scummvm.zip" && unzip -d "$RETROSYSTEMPATH" "$RETROTMPDIR/scummvm.zip"
 fi
 
 if [ ! -f "$RETROSYSTEMPATH/scummvm/extra/MT32_PCM.ROM" ]; then
